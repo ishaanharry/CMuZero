@@ -62,7 +62,7 @@ def train_muzero(
         from lzero.mcts import StochasticMuZeroGameBuffer as GameBuffer
 
     if cfg.policy.cuda and torch.cuda.is_available():
-        cfg.policy.device = 'cuda'
+        cfg.policy.device = 'cuda:0'
     else:
         cfg.policy.device = 'cpu'
 
@@ -133,8 +133,12 @@ def train_muzero(
         eval_train_iter_list = []
         eval_train_envstep_list = []
 
+    print("here! train_mu_zero.py")
+
     # Evaluate the random agent
     stop, reward = evaluator.eval(learner.save_checkpoint, learner.train_iter, collector.envstep)
+
+    print("here2! train_mu_zero.py")
 
     while True:
         log_buffer_memory_usage(learner.train_iter, replay_buffer, tb_logger)

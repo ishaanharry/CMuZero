@@ -6,13 +6,13 @@ from easydict import EasyDict
 # ==============================================================
 env_id = 'game_2048'
 action_space_size = 4
-collector_env_num = 8
-n_episode = 8
-evaluator_env_num = 3
+collector_env_num = 16
+n_episode = 16
+evaluator_env_num = 6
 num_simulations = 100
 update_per_collect = 200
 batch_size = 512
-max_env_step = int(5e6)
+max_env_step = int(5e8)
 reanalyze_ratio = 0.
 num_of_possible_chance_tile = 2
 chance_space_size = 16 * num_of_possible_chance_tile

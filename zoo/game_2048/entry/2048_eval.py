@@ -22,7 +22,7 @@ if __name__ == "__main__":
     """
 
     # model_path = './ckpt/ckpt_best.pth.tar'
-    model_path = None
+    model_path = '/home/deep-learning/LightZero/data_mz_ctree/game_2048_npct-2_muzero_ns100_upc200_rr0.0_bs512_sslw2_seed0/ckpt/iteration_70000.pth.tar'
 
     returns_mean_seeds = []
     returns_seeds = []
@@ -36,9 +36,10 @@ if __name__ == "__main__":
     main_config.env.replay_name_suffix = 'muzero_ns100_s0'
     # main_config.env.replay_name_suffix = 'stochastic_muzero_ns100_s0'
 
-    main_config.env.max_episode_steps = int(1e9)  # Adjust according to different environments
+    main_config.env.max_episode_steps = 4000  # Adjust according to different environments
     total_test_episodes = num_episodes_each_seed * len(seeds)
     create_config.env_manager.type = 'base'  # Visualization requires the 'type' to be set as base
+    create_config.policy.type = "muzero"
     main_config.env.evaluator_env_num = 1   # Visualization requires the 'env_num' to be set as 1
     main_config.env.n_evaluator_episode = total_test_episodes
     for seed in seeds:

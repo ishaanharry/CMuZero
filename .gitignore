@@ -21,6 +21,9 @@ data_*
 pkg/
 src/
 
+video/
+video_qbert/
+
 ### CVS template
 /CVS/*
 **/CVS/*

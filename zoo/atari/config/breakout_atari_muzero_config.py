@@ -1,7 +1,7 @@
 from easydict import EasyDict
 
 # options={'PongNoFrameskip-v4', 'QbertNoFrameskip-v4', 'MsPacmanNoFrameskip-v4', 'SpaceInvadersNoFrameskip-v4', 'BreakoutNoFrameskip-v4', ...}
-env_id = 'QbertNoFrameskip-v4'
+env_id = 'BreakoutNoFrameskip-v4'
 
 if env_id == 'PongNoFrameskip-v4':
     action_space_size = 6
@@ -17,12 +17,12 @@ elif env_id == 'BreakoutNoFrameskip-v4':
 # ==============================================================
 # begin of the most frequently changed config specified by the user
 # ==============================================================
-collector_env_num = 8
-n_episode = 8
-evaluator_env_num = 3
+collector_env_num = 16
+n_episode = 16
+evaluator_env_num = 6
 num_simulations = 50
 update_per_collect = 1000
-batch_size = 256
+batch_size = 1024
 max_env_step = int(1e6)
 reanalyze_ratio = 0.
 eps_greedy_exploration_in_collect = False

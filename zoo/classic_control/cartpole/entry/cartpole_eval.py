@@ -18,7 +18,7 @@ if __name__ == "__main__":
         seeds and the number of episodes per seed.
     """
     # model_path = "./ckpt/ckpt_best.pth.tar"
-    model_path = None
+    model_path = "/home/deep-learning/LightZero/data_mz_ctree/cartpole_muzero_ns25_upc100_rr0_seed0_240416_134105/ckpt/ckpt_best.pth.tar"
     returns_mean_seeds = []
     returns_seeds = []
     seeds = [0]
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     create_config.env_manager.type = 'base'  # Visualization requires the 'type' to be set as base
     main_config.env.evaluator_env_num = 1  # Visualization requires the 'env_num' to be set as 1
     main_config.env.n_evaluator_episode = total_test_episodes
+    main_config.env.save_replay = True
     main_config.env.replay_path = './video'
 
     for seed in seeds:

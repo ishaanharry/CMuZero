@@ -1,7 +1,7 @@
 from easydict import EasyDict
 
 # options={'PongNoFrameskip-v4', 'QbertNoFrameskip-v4', 'MsPacmanNoFrameskip-v4', 'SpaceInvadersNoFrameskip-v4', 'BreakoutNoFrameskip-v4', ...}
-env_id = 'QbertNoFrameskip-v4'
+env_id = 'PongNoFrameskip-v4'
 
 if env_id == 'PongNoFrameskip-v4':
     action_space_size = 6
@@ -17,13 +17,14 @@ elif env_id == 'BreakoutNoFrameskip-v4':
 # ==============================================================
 # begin of the most frequently changed config specified by the user
 # ==============================================================
-collector_env_num = 8
-n_episode = 8
-evaluator_env_num = 3
+gpu_num = 2
+collector_env_num = 32
+n_episode = int(32*gpu_num)
+evaluator_env_num = 12
 num_simulations = 50
 update_per_collect = 1000
 batch_size = 256
-max_env_step = int(1e6)
+max_env_step = int(1e9)
 reanalyze_ratio = 0.
 eps_greedy_exploration_in_collect = False
 # ==============================================================
@@ -31,7 +32,7 @@ eps_greedy_exploration_in_collect = False
 # ==============================================================
 
 atari_muzero_config = dict(
-    exp_name=f'data_mz_ctree/{env_id[:-14]}_muzero_ns{num_simulations}_upc{update_per_collect}_rr{reanalyze_ratio}_seed0',
+    exp_name=f'data_mz_ctree/{env_id[:-14]}_muzero_ns{num_simulations}_upc{update_per_collect}_rr{reanalyze_ratio}_ddp_{gpu_num}gpu_seed0',
     env=dict(
         stop_value=int(1e6),
         env_id=env_id,
@@ -52,7 +53,7 @@ atari_muzero_config = dict(
             norm_type='BN',
         ),
         cuda=True,
-        reanalyze_noise=False,
+        multi_gpu=True,
         env_type='not_board_games',
         game_segment_length=400,
         random_collect_episode_num=0,
@@ -94,10 +95,24 @@ atari_muzero_create_config = dict(
         type='muzero',
         import_names=['lzero.policy.muzero'],
     ),
+    collector=dict(
+        type='episode_muzero',
+        import_names=['lzero.worker.muzero_collector'],
+    )
 )
 atari_muzero_create_config = EasyDict(atari_muzero_create_config)
 create_config = atari_muzero_create_config
 
 if __name__ == "__main__":
+    """
+    Overview:
+        This script should be executed with <nproc_per_node> GPUs.
+        Run the following command to launch the script:
+        python -m torch.distributed.launch --nproc_per_node=2 ./LightZero/zoo/atari/config/atari_muzero_multigpu_ddp_config.py
+    """
+    from ding.utils import DDPContext
     from lzero.entry import train_muzero
-    train_muzero([main_config, create_config], seed=0, max_env_step=max_env_step)
+    from lzero.config.utils import lz_to_ddp_config
+    with DDPContext():
+        main_config = lz_to_ddp_config(main_config)
+        train_muzero([main_config, create_config], seed=0, max_env_step=max_env_step)

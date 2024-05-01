@@ -17,13 +17,13 @@ elif env_id == 'BreakoutNoFrameskip-v4':
 # ==============================================================
 # begin of the most frequently changed config specified by the user
 # ==============================================================
-collector_env_num = 8
-n_episode = 8
+collector_env_num = 16
+n_episode = 16
 evaluator_env_num = 3
 num_simulations = 50
 update_per_collect = 1000
 batch_size = 256
-max_env_step = int(1e6)
+max_env_step = int(1e9)
 reanalyze_ratio = 0.
 eps_greedy_exploration_in_collect = False
 # ==============================================================
@@ -35,7 +35,7 @@ atari_muzero_config = dict(
     env=dict(
         stop_value=int(1e6),
         env_id=env_id,
-        obs_shape=(4, 96, 96),
+        obs_shape=(8, 96, 96),
         collector_env_num=collector_env_num,
         evaluator_env_num=evaluator_env_num,
         n_evaluator_episode=evaluator_env_num,
@@ -43,8 +43,8 @@ atari_muzero_config = dict(
     ),
     policy=dict(
         model=dict(
-            observation_shape=(4, 96, 96),
-            frame_stack_num=4,
+            observation_shape=(8, 96, 96),
+            frame_stack_num=8,
             action_space_size=action_space_size,
             downsample=True,
             self_supervised_learning_loss=True,  # default is False
